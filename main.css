@@ -42,7 +42,7 @@ body {
   font-size: 2.2rem;
   padding: 2.2rem 4rem 0px 2px;
 }
-.Welcome {
+.welcome {
   font-size: 2rem;
   margin: 3rem 0px 0px 3rem;
   font-weight: 500;
@@ -57,9 +57,9 @@ body {
   grid-template-rows: auto repeat(3, 15rem) auto;
   gap: 2rem;
 
-  /* NOTE This creates the fade in/out anumation */
-  /* opacity: 0;
-  transition: all 1s; */
+  /* / NOTE This creates the fade in/out anumation */
+  opacity: 0;
+  transition: all 1s;
 }
 
 .balance {
