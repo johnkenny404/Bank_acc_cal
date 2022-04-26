@@ -12,6 +12,11 @@ const loginBTN = document.querySelector(".login-btn");
 const labelWelcomeMsg = document.querySelector(".welcome");
 const appContainer = document.querySelector(".app");
 
+//transfer form
+const formInputTo = document.querySelector(".form__input--to");
+const formInputAmount = document.querySelector(".form__input--amount");
+const formBTNTransfer = document.querySelector(".form__btn--transfer");
+
 const account1 = {
   owner: "Kenny John",
   movements: [200, 450, -400, 3000, -650, -130, 70, 1300],
@@ -59,11 +64,11 @@ const displayMovements = function (movements) {
 
 // displayMovements(account1.movements);
 
-const calDisplayBal = function (movements) {
-  const balance = movements.reduce(function (acc, mov) {
+const calDisplayBal = function (acc) {
+  acc.balance = acc.movements.reduce(function (acc, mov) {
     return acc + mov;
   }, 0);
-  labelBalance.textContent = `${balance} EUR`;
+  labelBalance.textContent = `${acc.balance} EUR`;
 };
 // calDisplayBal(account1.movements);
 
@@ -97,6 +102,15 @@ const creatUserName = function (accts) {
   });
 };
 creatUserName(accounts);
+
+//refactoring login
+const updateUI = function (acc) {
+  displayMovements(acc.movements);
+  // displaybal
+  calDisplayBal(acc);
+  //displaysummary
+  calDisplaySummary(acc);
+};
 // event handlers
 let currentAccount;
 
@@ -116,10 +130,29 @@ loginBTN.addEventListener("click", function (e) {
     loginInPin.blur();
     // lognUser = loginInPin = "";
     //displayMovement
-    displayMovements(currentAccount.movements);
-    // displaybal
-    calDisplayBal(currentAccount.movements);
-    //displaysummary
-    calDisplaySummary(currentAccount);
+    updateUI(currentAccount);
+  }
+});
+
+formBTNTransfer.addEventListener("click", function (e) {
+  e.preventDefault();
+  const amount = Number(formInputAmount.value);
+  const reciverAcc = accounts.find((acc) => acc.userName === formInputTo.value);
+
+  if (
+    amount > 0 &&
+    amount <= currentAccount.balance &&
+    currentAccount.userName !== reciverAcc?.userName &&
+    reciverAcc
+  ) {
+    formInputAmount.value = formInputTo.value = "";
+    currentAccount.movements.push(-amount);
+    reciverAcc.movements.push(amount);
+    updateUI(currentAccount);
+    // displayMovements(currentAccount.movements);
+    // // displaybal
+    // calDisplayBal(currentAccount);
+    // //displaysummary
+    // calDisplaySummary(currentAccount);
   }
 });
