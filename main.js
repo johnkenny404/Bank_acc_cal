@@ -17,6 +17,11 @@ const formInputTo = document.querySelector(".form__input--to");
 const formInputAmount = document.querySelector(".form__input--amount");
 const formBTNTransfer = document.querySelector(".form__btn--transfer");
 
+// closin acc
+const formInputUser = document.querySelector(".form__input--user");
+const formInputPin = document.querySelector(".form__input--pin");
+const formBTNClose = document.querySelector(".form__btn--close");
+
 const account1 = {
   owner: "Kenny John",
   movements: [200, 450, -400, 3000, -650, -130, 70, 1300],
@@ -117,7 +122,6 @@ let currentAccount;
 loginBTN.addEventListener("click", function (e) {
   e.preventDefault();
   currentAccount = accounts.find((acct) => acct.userName === lognUser.value);
-  console.log(currentAccount);
 
   if (currentAccount?.pin === Number(loginInPin.value)) {
     //display Ul and a welcome message
@@ -154,5 +158,30 @@ formBTNTransfer.addEventListener("click", function (e) {
     // calDisplayBal(currentAccount);
     // //displaysummary
     // calDisplaySummary(currentAccount);
+  }
+});
+
+//deleting an account
+formBTNClose.addEventListener("click", function (e) {
+  e.preventDefault();
+
+  if (
+    currentAccount.userName === formInputUser.value &&
+    Number(formInputPin.value) === currentAccount.pin
+  ) {
+    const index = accounts.findIndex(
+      (acc) => acc.userName === currentAccount.userName
+    );
+
+    console.log("done");
+
+    //deleting
+    accounts.splice(index, 1);
+
+    formInputPin.value = formInputUser.value = "";
+
+    // hiding the UI
+
+    appContainer.style.opacity = 0;
   }
 });
