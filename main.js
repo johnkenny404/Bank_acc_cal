@@ -22,6 +22,13 @@ const formInputUser = document.querySelector(".form__input--user");
 const formInputPin = document.querySelector(".form__input--pin");
 const formBTNClose = document.querySelector(".form__btn--close");
 
+// loan request
+const formLoan = document.querySelector(".form__input--loan-amount");
+const loanBtn = document.querySelector(".form__btn--loan");
+
+// sorting movenment array
+const btnSort = document.querySelector(".btn--sort");
+
 const account1 = {
   owner: "Kenny John",
   movements: [200, 450, -400, 3000, -650, -130, 70, 1300],
@@ -52,9 +59,12 @@ const account4 = {
 
 const accounts = [account1, account2, account3, account4];
 
-const displayMovements = function (movements) {
+const displayMovements = function (movements, sorting = false) {
   containerMovements.innerHTML = "";
-  movements.forEach(function (mov, i) {
+  // sorting movements through the sort button
+  const movs = sorting ? movements.slice().sort((a, b) => a - b) : movements;
+
+  movs.forEach(function (mov, i) {
     const type = mov > 0 ? "deposit" : "withdrawal";
     const html = `
         <div class="movements__row">
@@ -161,6 +171,24 @@ formBTNTransfer.addEventListener("click", function (e) {
   }
 });
 
+loanBtn.addEventListener("click", function (e) {
+  e.preventDefault();
+  const amount = Number(formLoan.value);
+
+  if (
+    amount > 0 &&
+    currentAccount.movements.some(
+      (mov) => mov >= amount * 0.1 /* 10 percent of the deposte*/
+    )
+  ) {
+    // add the loan to the deposie
+    currentAccount.movements.push(amount);
+    // update the UI
+    updateUI(currentAccount);
+  }
+  formLoan.value = "";
+});
+
 //deleting an account
 formBTNClose.addEventListener("click", function (e) {
   e.preventDefault();
@@ -184,4 +212,10 @@ formBTNClose.addEventListener("click", function (e) {
 
     appContainer.style.opacity = 0;
   }
+});
+let sortings = false;
+btnSort.addEventListener("click", function (e) {
+  e.preventDefault();
+  displayMovements(currentAccount.movements, !sortings);
+  sortings = !sortings;
 });
